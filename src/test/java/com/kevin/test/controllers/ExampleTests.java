@@ -1,7 +1,12 @@
 package com.kevin.test.controllers;
 
+import static org.hamcrest.CoreMatchers.nullValue;
+
 import static org.junit.Assert.assertTrue;
+
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.forwardedUrl;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
@@ -18,13 +23,15 @@ import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
+import com.kevin.mvc.java.config.ApplicationConfig;
 import com.kevin.mvc.java.config.DispatcherServletConfig;
+
 
 @RunWith(SpringRunner.class)
 @WebAppConfiguration
 //@ContextConfiguration("classpath:test-servlet-context.xml")
 //@ContextConfiguration(locations = "file:src/main/webapp/WEB-INF/spring/dispatcher-servlet.xml")
-@ContextConfiguration(classes = {DispatcherServletConfig.class})
+@ContextConfiguration(classes = {DispatcherServletConfig.class, ApplicationConfig.class})
 public class ExampleTests {
 	
 	@Autowired
@@ -50,5 +57,19 @@ public class ExampleTests {
 		 this.mockMvc.perform(get("/"))
 			.andExpect(status().isOk())
 			.andExpect(view().name("home"));
+	}
+	
+	@Test
+	public void showAddProjectForm_ShouldCreateFormObjectAndRenderAddProjectForm() {
+		/*mockMvc.perform(get("/project/add")).andExpect(status().isOk())
+		.andExpect(view().name(TodoController.VIEW_ADD))
+		.andExpect(forwardedUrl("/WEB-INF/views/todo/todo_add.jsp"))
+		.andExpect(model().attribute(TodoController.MODEL_ATTRIBUTE, hasProperty("id", nullValue())))
+		.andExpect(model().attribute(TodoController.MODEL_ATTRIBUTE,
+				hasProperty("description", isEmptyOrNullString())))
+		.andExpect(model().attribute(TodoController.MODEL_ATTRIBUTE,
+				hasProperty("title", isEmptyOrNullString())));
+		
+		verifyZeroInteractions(todoServiceMock);*/
 	}
 }

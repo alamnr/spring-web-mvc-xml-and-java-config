@@ -8,8 +8,10 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 //@EnableJpaRepositories("com.telusko.domain")
 //@EnableTransactionManagement
-@ComponentScan(basePackageClasses = {  })
+@ComponentScan(basePackages =  { "com.kevin.mvc.service" })
 //@EnableJpaAuditing(auditorAwareRef = "customAuditorAware")
 public class ApplicationConfig {
+	
+	
 
 }
