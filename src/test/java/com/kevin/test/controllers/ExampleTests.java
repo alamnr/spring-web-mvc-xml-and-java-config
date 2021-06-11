@@ -18,9 +18,13 @@ import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
+import com.kevin.mvc.java.config.DispatcherServletConfig;
+
 @RunWith(SpringRunner.class)
 @WebAppConfiguration
-@ContextConfiguration("classpath:test-servlet-context.xml")
+//@ContextConfiguration("classpath:test-servlet-context.xml")
+//@ContextConfiguration(locations = "file:src/main/webapp/WEB-INF/spring/dispatcher-servlet.xml")
+@ContextConfiguration(classes = {DispatcherServletConfig.class})
 public class ExampleTests {
 	
 	@Autowired
