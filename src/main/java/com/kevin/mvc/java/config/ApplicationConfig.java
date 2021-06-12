@@ -1,7 +1,10 @@
 package com.kevin.mvc.java.config;
 
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+
+import com.kevin.mvc.service.ProjectService;
 
 
 

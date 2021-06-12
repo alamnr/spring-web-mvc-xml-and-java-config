@@ -1,12 +1,20 @@
 package com.kevin.mvc.controllers;
 
+import java.net.Authenticator.RequestorType;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 
+import com.kevin.mvc.dto.ProjectDto;
+import com.kevin.mvc.exception.EntityNotFoundException;
 import com.kevin.mvc.service.ProjectService;
 
 @Controller
@@ -41,14 +49,48 @@ public class ProjectController {
 	public ProjectController(ProjectService projectService, MessageSource messageSource) {
 		super();
 		this.projectService = projectService;
-		this.messageSource = messageSource;
+		this.messageSource = messageSource; 
 	}
 	
-	@RequestMapping("/add")
+	@RequestMapping(value = "/{id}")
+	public String findOne(@PathVariable Long id,Model model) throws EntityNotFoundException {
+		model.addAttribute(MODEL_ATTRIBUTE, this.projectService.find(id));
+		return "project/project";
+	}
+	
+	@RequestMapping(value = "/find")
+	public String findAll(Model model) {
+		model.addAttribute(MODEL_ATTRIBUTE_LIST, this.projectService.findAll());
+		return "project/projects";
+	}
+	
+	@RequestMapping(value = "/add", method = RequestMethod.GET)
 	public String addProject() {
+		LOGGER.info("invoking add project");
+		System.out.println("Invoking add project");
 		return "project/project_add"; 
 	}
-
 	
+	@RequestMapping(value = "/add", method = RequestMethod.POST)
+	public String saveProject(@ModelAttribute ProjectDto project) {
+		LOGGER.info("invoking save project");
+		System.out.println("Invoking save project");
+		System.out.println(project); 
+		return "project/project_add";
+	}
+
+	/*@RequestMapping(value = "/add" , method = RequestMethod.POST, params = {"type=multi"})
+	public String saveMultiProject() {
+		LOGGER.info("save multi project");
+		System.out.println("Save multi project");
+		return "project/project_add";
+	}
+	
+	@RequestMapping(value = "/add" , method = RequestMethod.POST,params = {"type=multi","special"})
+	public String saveMultiSpecialProject() {
+		LOGGER.info("save multi special project");
+		System.out.println("save multi special project");
+		return "project/project_add";
+	}*/
 
 }
