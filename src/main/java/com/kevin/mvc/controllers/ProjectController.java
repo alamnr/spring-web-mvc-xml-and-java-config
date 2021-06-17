@@ -1,6 +1,9 @@
 package com.kevin.mvc.controllers;
 
 import java.net.Authenticator.RequestorType;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -65,18 +68,24 @@ public class ProjectController {
 	}
 	
 	@RequestMapping(value = "/add", method = RequestMethod.GET)
-	public String addProject() {
+	public String addProject(Model model) {
 		LOGGER.info("invoking add project");
 		System.out.println("Invoking add project");
+		List<String> types = new ArrayList<>(Arrays.asList("Single Year","Multi Year"));
+		model.addAttribute("types", types);
+		model.addAttribute(MODEL_ATTRIBUTE, new ProjectDto());
+		
 		return "project/project_add"; 
 	}
 	
 	@RequestMapping(value = "/add", method = RequestMethod.POST)
-	public String saveProject(@ModelAttribute ProjectDto project) {
+	public String saveProject(@ModelAttribute ProjectDto project,Model model) {
 		LOGGER.info("invoking save project");
 		System.out.println("Invoking save project");
 		System.out.println(project); 
-		return "project/project_add";
+		model.addAttribute(MODEL_ATTRIBUTE, new ProjectDto());
+		
+		return "redirect:project/add";
 	}
 
 	/*@RequestMapping(value = "/add" , method = RequestMethod.POST, params = {"type=multi"})

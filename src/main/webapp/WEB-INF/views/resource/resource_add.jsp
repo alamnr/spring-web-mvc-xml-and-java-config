@@ -29,12 +29,12 @@
 	<div class="container">
 
 		<div class="row">
-			<h1>Resource</h1>
+			<h1><spring:message code="label.resource.add.page.title"></spring:message></h1>
 		</div>
 
-		<spring:url value="/resource/save" var="formUrl" />
+		<spring:url value="/resource/review" var="formUrl" />
 		<form:form action="${formUrl }" method="POST"
-			modelAttribute="resource">
+			modelAttribute="resource" >
 
 			<div class="row">
 
@@ -46,8 +46,7 @@
 
 				<div class="form-group">
 					<label for="resource-type">Type</label>
-					<form:select path="type" items="${typeOptions}"
-						cssClass="selectpicker" />
+					<form:select id="resource-type" path="type" items="${typeOptions}"	cssClass="selectpicker" />
 					<!-- <select id="resource-type" name="type" class="selectpicker">
 						<option></option>
 						<option value="material">Material</option>

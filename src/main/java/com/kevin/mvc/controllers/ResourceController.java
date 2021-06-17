@@ -2,48 +2,111 @@ package com.kevin.mvc.controllers;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Enumeration;
 import java.util.LinkedList;
 import java.util.List;
 
+import javax.servlet.http.HttpSession;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.SessionAttributes;
 
 import com.kevin.mvc.dto.ResourceDto;
+import com.kevin.mvc.service.ProjectService;
 
 @Controller
 @RequestMapping("/resource")
+@SessionAttributes("resource")
 public class ResourceController {
+	
+	private static final Logger LOGGER = LoggerFactory.getLogger(ResourceController.class);
+	
+	protected static final String FEEDBACK_MESSAGE_KEY_ADDED = "feedback.message.added";
+	protected static final String FEEDBACK_MESSAGE_KEY_UPDATED = "feedback.message.updated";
+	protected static final String FEEDBACK_MESSAGE_KEY_DELETED = "feedback.message.deleted";
+	protected static final String FLASH_MESSAGE_KEY_FEEDBACK = "feedbackMessage";
+
+	protected static final String MODEL_ATTRIBUTE = "resource";
+	protected static final String MODEL_ATTRIBUTE_LIST = "resources";
+
+	protected static final String PARAMETER_ID = "id";
+
+	protected static final String REQUEST_MAPPING_LIST = "/resources";
+	protected static final String REQUEST_MAPPING_VIEW = "/resource/{id}";
+
+	protected static final String VIEW_ADD = "resource/resource_add";
+	protected static final String VIEW_LIST = "resource/resource_list";
+	protected static final String VIEW_UPDATE = "resource/resource_update";
+	protected static final String VIEW_DETAIL = "resource/resource_details";
+	
+	//private final ProjectService projectService;
+	
+	private final MessageSource messageSource;
+	
+	
+	@Autowired
+	public ResourceController(MessageSource messageSource) {
+		super();
+		this.messageSource = messageSource;
+	}
 
 	@RequestMapping("/add")
-	public String add(Model model) {
-		
-		List<String> typeOptions = new LinkedList<>(Arrays.asList("Material","Other","Staff","Technical Equipment"));
-		model.addAttribute("typeOptions", typeOptions);
-		
-		List<String> radios = new LinkedList<String>(Arrays.asList("Hours","Piece","Tons"));
-		model.addAttribute("radios", radios);
-		
-		List<String> checks = new LinkedList<String>(Arrays.asList("Lead Time","Special Rate","Require Approval"));
-		model.addAttribute("checks", checks);
-		
-		ResourceDto resourceDto = new  ResourceDto();
-		resourceDto.setName("New Resource");
-		resourceDto.setType(typeOptions.get(2)); 
-		resourceDto.setUnitOfMeasure(radios.get(1));
-		resourceDto.setIndicators(new String[] {checks.get(0),checks.get(2)});
-		model.addAttribute("resource", resourceDto);
-		
-		
+	public String add() {
+		System.out.println("Invoking add()");
 		return "resource/resource_add";
 	}
 	
-	@RequestMapping("/save")
-	public String save(@ModelAttribute ResourceDto resource,Model model) {
-		System.out.println("Invoking save method");
+	@RequestMapping("/review")
+	public String review(@ModelAttribute("resource") ResourceDto resource,HttpSession session) {
+		System.out.println("Invoking review()");
 		System.out.println(resource.toString());
-		model.addAttribute("resource", new ResourceDto());
-		return "resource/resource_add";
+		
+		Enumeration<String> attributes = session.getAttributeNames();
+		while (attributes.hasMoreElements()) {
+		    String attribute = (String) attributes.nextElement();
+		    System.out.println(attribute+" : "+session.getAttribute(attribute));
+		}
+		return "resource/resource_review";
+	}
+	
+	@RequestMapping("/save")
+	public String save(@ModelAttribute("resource") ResourceDto resource) {
+		System.out.println("Invoking save() ");
+		System.out.println(resource.toString());
+		
+		return "redirect:/resource/add";
+	}
+	
+	@ModelAttribute("resource")
+	public ResourceDto getResource() {
+		System.out.println("Adding a new resource to the model");
+		ResourceDto resourceDto = new  ResourceDto();
+		//resourceDto.setName("New Resource");
+		/*resourceDto.setType(getTypes().get(2)); 
+		resourceDto.setUnitOfMeasure(getRadios().get(1));
+		resourceDto.setIndicators(new String[] {getChecks().get(0),getChecks().get(2)});*/
+		return resourceDto;
+	}
+	
+	@ModelAttribute("typeOptions")
+	public List<String> getTypes(){
+		return new LinkedList<>(Arrays.asList("Material","Other","Staff","Technical Equipment"));
+	}
+	
+	@ModelAttribute("radios")
+	public  List<String>  getRadios(){
+		return new LinkedList<String>(Arrays.asList("Hours","Piece","Tons"));
+	}
+	
+	@ModelAttribute("checks")
+	public List<String> getChecks(){
+		return new LinkedList<String>(Arrays.asList("Lead Time","Special Rate","Require Approval"));
 	}
 }

@@ -19,7 +19,7 @@ public class HomeController {
 		LOGGER.info("inside home controller");
 		ProjectDto project = new ProjectDto();
 		project.setName("First Project");
-		project.setSponsor("Gasa");
+		
 		project.setDescription("Simple project sponsored by gasa");
 		
 		model.addAttribute("currentProject", project);

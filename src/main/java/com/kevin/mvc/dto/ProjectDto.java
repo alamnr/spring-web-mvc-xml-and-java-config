@@ -1,6 +1,7 @@
 package com.kevin.mvc.dto;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 import lombok.Data;
 import lombok.ToString;
@@ -16,7 +17,7 @@ public class ProjectDto {
 	
 	private String type;
 	
-	private String sponsor;
+	private Sponsor sponsor;
 	
 	private BigDecimal authorizedHours;
 	
@@ -27,5 +28,7 @@ public class ProjectDto {
 	private boolean special;
 	
 	private String year;	
+	
+	private List<String> pointsOfContact; 
 
 }
