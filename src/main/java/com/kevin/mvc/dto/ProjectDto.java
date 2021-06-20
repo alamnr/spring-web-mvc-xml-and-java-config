@@ -3,6 +3,8 @@ package com.kevin.mvc.dto;
 import java.math.BigDecimal;
 import java.util.List;
 
+import javax.validation.constraints.NotBlank;
+
 import lombok.Data;
 import lombok.ToString;
 
@@ -23,6 +25,7 @@ public class ProjectDto {
 	
 	private BigDecimal authorizedFunds;
 	
+	@NotBlank(message = "Description must not empty")
 	private String description;	
 	
 	private boolean special;

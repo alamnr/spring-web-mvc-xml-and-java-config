@@ -20,6 +20,7 @@
 	src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
 <script
 	src="<spring:url value="/resources/js/bootstrap-select.min.js"/>"></script>
+	
 
 </head>
 <body>
@@ -72,6 +73,7 @@
 					<label for="indicators">Indicators</label>
 					<!-- <input id="unit" type="text" class="form-control" name="unitOfMeasure" /> -->
 					<form:checkboxes id="indicators" path="indicators" items="${checks}" />
+					<a href="/resource/request" id="sendReq">Send Request</a>
 				</div>
 				
 				<div class="form-group">
@@ -87,4 +89,19 @@
 
 	</div>
 </body>
+
+<script type="text/javascript">
+document.getElementById('sendReq').addEventListener('click',(e)=>{
+    e.preventDefault(); console.log('click me');
+	fetch('./request',{method: 'POST',
+	    headers: {
+	        'Accept': 'application/json',
+	        'Content-Type': 'application/json'
+	      },body:$('form').serialize()})
+	.then(response=>response.text())
+	.then(data=> console.log(data))
+	.catch(error=>console.log(error));
+
+});
+</script>
 </html>

@@ -25,12 +25,13 @@
 		<div class="row">
 			
 			<spring:url value="/project/add" var="formUrl"/>
-			<form:form action="${formUrl}" method="post" modelAttribute="project"  >
+			<form:form action="${formUrl}" method="post" modelAttribute="projectDto"  >
 			
 				<div class="form-group">
 					<label for="project-name">Name</label>
 					<form:input  id="project-name" 
 							cssClass="form-control" path="name"/>
+					<form:errors path="name"/>
 				</div>
 
 				<div class="form-group">
@@ -76,6 +77,7 @@
 				<div class="form-group">
 					<label for="desc">Description</label>
 					<form:textarea cssClass="form-control" rows="3" path="description" id="desc"/>
+					<form:errors path="description"/>
 				</div>
 				
 				<div class="form-group">

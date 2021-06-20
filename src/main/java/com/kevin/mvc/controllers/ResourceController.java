@@ -15,8 +15,11 @@ import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.SessionAttributes;
+import org.springframework.web.bind.support.SessionStatus;
 
 import com.kevin.mvc.dto.ResourceDto;
 import com.kevin.mvc.service.ProjectService;
@@ -77,11 +80,22 @@ public class ResourceController {
 	}
 	
 	@RequestMapping("/save")
-	public String save(@ModelAttribute("resource") ResourceDto resource) {
+	public String save(@ModelAttribute("resource") ResourceDto resource,SessionStatus status) {
 		System.out.println("Invoking save() ");
 		System.out.println(resource.toString());
-		
+		status.setComplete();
 		return "redirect:/resource/add";
+	}
+	
+	@RequestMapping("/request")
+	@ResponseBody
+	//public String request(@ModelAttribute("resource") ResourceDto resource) {
+	//public String request(@RequestBody String resource) {
+	public String request(@RequestBody ResourceDto resource) {
+		System.out.println("Invoking request()");
+		System.out.println(resource.toString()); 
+		//System.out.println(resource);
+		return "The request has been sent for approval. ";
 	}
 	
 	@ModelAttribute("resource")

@@ -5,12 +5,19 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import javax.validation.Valid;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.Errors;
+import org.springframework.validation.ObjectError;
+import org.springframework.web.bind.WebDataBinder;
+import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -19,6 +26,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import com.kevin.mvc.dto.ProjectDto;
 import com.kevin.mvc.exception.EntityNotFoundException;
 import com.kevin.mvc.service.ProjectService;
+import com.kevin.mvc.validator.ProjectValidator;
 
 @Controller
 @RequestMapping("/project")
@@ -31,22 +39,22 @@ public class ProjectController {
 	protected static final String FEEDBACK_MESSAGE_KEY_DELETED = "feedback.message.deleted";
 	protected static final String FLASH_MESSAGE_KEY_FEEDBACK = "feedbackMessage";
 
-	protected static final String MODEL_ATTRIBUTE = "project";
-	protected static final String MODEL_ATTRIBUTE_LIST = "projects";
+	public static final String MODEL_ATTRIBUTE = "projectDto";
+	public static final String MODEL_ATTRIBUTE_LIST = "projects";
 
-	protected static final String PARAMETER_ID = "id";
+	public static final String PARAMETER_ID = "id";
 
-	protected static final String REQUEST_MAPPING_LIST = "/projects";
-	protected static final String REQUEST_MAPPING_VIEW = "/project/{id}";
+	public static final String REQUEST_MAPPING_LIST = "/projects";
+	public static final String REQUEST_MAPPING_VIEW = "/project/{id}";
 
-	protected static final String VIEW_ADD = "project/project_add";
-	protected static final String VIEW_LIST = "project/project_list";
-	protected static final String VIEW_UPDATE = "project/project_update";
-	protected static final String VIEW_DETAIL = "project/project_details";
+	public static final String VIEW_ADD = "project/project_add";
+	public static final String VIEW_LIST = "project/project_list";
+	public static final String VIEW_UPDATE = "project/project_update";
+	public static final String VIEW_DETAIL = "project/project_details";
 	
 	private final ProjectService projectService;
 	
-	private final MessageSource messageSource;
+	private final MessageSource messageSource; 
 	
 	@Autowired
 	public ProjectController(ProjectService projectService, MessageSource messageSource) {
@@ -58,13 +66,13 @@ public class ProjectController {
 	@RequestMapping(value = "/{id}")
 	public String findOne(@PathVariable Long id,Model model) throws EntityNotFoundException {
 		model.addAttribute(MODEL_ATTRIBUTE, this.projectService.find(id));
-		return "project/project";
+		return ProjectController.VIEW_DETAIL;
 	}
 	
 	@RequestMapping(value = "/find")
 	public String findAll(Model model) {
 		model.addAttribute(MODEL_ATTRIBUTE_LIST, this.projectService.findAll());
-		return "project/projects";
+		return ProjectController.VIEW_LIST;
 	}
 	
 	@RequestMapping(value = "/add", method = RequestMethod.GET)
@@ -73,19 +81,36 @@ public class ProjectController {
 		System.out.println("Invoking add project");
 		List<String> types = new ArrayList<>(Arrays.asList("Single Year","Multi Year"));
 		model.addAttribute("types", types);
-		model.addAttribute(MODEL_ATTRIBUTE, new ProjectDto());
+		ProjectDto obj = new ProjectDto();
+		//obj.setName("Project-1");
 		
-		return "project/project_add"; 
+		model.addAttribute(MODEL_ATTRIBUTE, obj);
+		
+		return ProjectController.VIEW_ADD;    
 	}
 	
 	@RequestMapping(value = "/add", method = RequestMethod.POST)
-	public String saveProject(@ModelAttribute ProjectDto project,Model model) {
+	public String saveProject(@Valid @ModelAttribute ProjectDto project, Errors error) {
 		LOGGER.info("invoking save project");
 		System.out.println("Invoking save project");
-		System.out.println(project); 
-		model.addAttribute(MODEL_ATTRIBUTE, new ProjectDto());
+		System.out.println(project); 	
 		
-		return "redirect:project/add";
+		if(!error.hasErrors()) {
+			System.out.println("The project validated");
+		} else {
+			System.out.println("The project did not validated");
+			List<ObjectError> allErrors = error.getAllErrors();
+			for (ObjectError objectError : allErrors) {
+				System.out.println(objectError);
+			}
+			
+			return ProjectController.VIEW_ADD;
+			  
+		}
+		
+		
+		
+		return "redirect:/project/add";
 	}
 
 	/*@RequestMapping(value = "/add" , method = RequestMethod.POST, params = {"type=multi"})
@@ -102,4 +127,9 @@ public class ProjectController {
 		return "project/project_add";
 	}*/
 
+	
+	@InitBinder
+	public void initBinder(WebDataBinder binder) {
+		binder.addValidators(new ProjectValidator());
+	}
 }

@@ -81,13 +81,13 @@ public class ExampleTests {
 	@Test
 	public void showAddProjectForm_ShouldCreateFormObjectAndRenderAddProjectForm() throws Exception {
 		mockMvc.perform(get("/project/add")).andExpect(status().isOk())
-		.andExpect(view().name("project/project_add"))
-		.andExpect(forwardedUrl("/WEB-INF/views/project/project_add.jsp"));
-		/*.andExpect(model().attribute(ProjectController.MODEL_ATTRIBUTE, hasProperty("id", nullValue())))
+		.andExpect(view().name(ProjectController.VIEW_ADD))
+		.andExpect(forwardedUrl("/WEB-INF/views/project/project_add.jsp"))
+		.andExpect(model().attribute(ProjectController.MODEL_ATTRIBUTE, hasProperty("id", nullValue())))
+		//.andExpect(model().attribute(ProjectController.MODEL_ATTRIBUTE,hasProperty("name", isEmptyOrNullString())))
+		.andExpect(model().attribute(ProjectController.MODEL_ATTRIBUTE,hasProperty("name", is("Project-1"))))
 		.andExpect(model().attribute(ProjectController.MODEL_ATTRIBUTE,
-				hasProperty("description", isEmptyOrNullString())))
-		.andExpect(model().attribute(ProjectController.MODEL_ATTRIBUTE,
-				hasProperty("title", isEmptyOrNullString())));*/
+				hasProperty("type", isEmptyOrNullString())));
 		/*System.out.println(projectService);
 		verifyNoMoreInteractions(projectService);*/
 	}
