@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
 import org.slf4j.Logger;
@@ -17,6 +18,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.Errors;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.WebDataBinder;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -86,8 +88,19 @@ public class ProjectController {
 		
 		model.addAttribute(MODEL_ATTRIBUTE, obj);
 		
-		return ProjectController.VIEW_ADD;    
+		if(1==1) { 
+			throw new RuntimeException();
+		}
+		
+		return ProjectController.VIEW_ADD;                
 	}
+	
+	/*
+	// Esception handling in granular level
+	@ExceptionHandler(Exception.class)
+	public String handleError(HttpServletRequest request  ) {
+		return "error/controller_error";
+	}*/
 	
 	@RequestMapping(value = "/add", method = RequestMethod.POST)
 	public String saveProject(@Valid @ModelAttribute ProjectDto project, Errors error) {

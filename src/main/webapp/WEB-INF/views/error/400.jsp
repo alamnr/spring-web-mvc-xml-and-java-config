@@ -17,7 +17,7 @@
 <body>
 	<jsp:include page="../../views/fragments/header.jsp"></jsp:include>
 	<div class="container">
-  		<h2>404  Resource not found</h2>
+  		<h2>400  Bad Request</h2>
   	</div>
 </body>
 </html>

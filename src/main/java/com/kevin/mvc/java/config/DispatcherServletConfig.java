@@ -21,6 +21,7 @@ import org.springframework.web.servlet.view.InternalResourceViewResolver;
 
 @Configuration
 @ComponentScan(basePackages = "com.kevin.mvc.controllers")
+@ComponentScan(basePackages = "com.kevin.mvc.exception.resolver")
 @EnableWebMvc
 public class DispatcherServletConfig implements WebMvcConfigurer {
 
@@ -39,26 +40,27 @@ public class DispatcherServletConfig implements WebMvcConfigurer {
 		return internalResourceViewResolver;
 	}
 
-	@Bean
+	/*@Bean
 	public SimpleMappingExceptionResolver simpleMappingExceptionResolver() {
 		SimpleMappingExceptionResolver simpleMappingExceptionResolver = new SimpleMappingExceptionResolver();
-
+	
 		Properties exceptionMappings = new Properties();
 		exceptionMappings.put("com.spring.mvc.test.exception.TodoNotFoundException", "error/404");
 		exceptionMappings.put("java.lang.Exception", "error/error");
 		exceptionMappings.put("java.lang.RuntimeException", "error/error");
-
+	
 		simpleMappingExceptionResolver.setExceptionMappings(exceptionMappings);
-
+	
 		Properties statusCodes = new Properties();
-
-		statusCodes.put("error/404", "404");
-		statusCodes.put("error/error", "500");
-
+	
+		statusCodes.put("error/404", "404");    // Resource not found
+		statusCodes.put("error/error", "500");  // Internal  server error 
+		statusCodes.put("error/400", "400");	// Bad request
+	
 		simpleMappingExceptionResolver.setStatusCodes(statusCodes);
-
+	
 		return simpleMappingExceptionResolver;
-	}
+	}*/
 
 	@Bean("messageSource")
 	public MessageSource messageSource() {
